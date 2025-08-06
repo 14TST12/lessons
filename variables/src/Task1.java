@@ -13,6 +13,7 @@ public class Task1 {
         byte byteNumber1 = 11;
         short shortNumber2 = 222;
         long longNumber3 = 3333;
+        int intNumber4 = 444;
         String manyRows = "Java task #1";
         char letter = 'Q';
         double doubleNumber4 = 14632.24;
@@ -23,6 +24,7 @@ public class Task1 {
         System.out.println(byteNumber1);
         System.out.println(shortNumber2);
         System.out.println(longNumber3);
+        System.out.println(intNumber4);
         System.out.println(manyRows);
         System.out.println(letter);
         System.out.println(doubleNumber4);
@@ -73,6 +75,18 @@ public class Task1 {
         long incMultiLong = ++multiLong;
         long decDivisionLong = --divisionLong;
         System.out.println(incMultiLong + " - это префиксный инкремент умножения, \n" + decDivisionLong + " - это префиксный декремент деления. \n");
+
+        // Для Инта приводить ни к чему не надо, так как все литералы и так инты по дефолту
+        int sumInt = intNumber4 + 11;
+        int deltaInt = intNumber4 - 33;
+        int multiInt = intNumber4 * 15;
+        int divisionInt = intNumber4 / 11;
+        int remainderInt = intNumber4 % 5;
+        System.out.println("Результаты мат. операций для Инта: \n" + sumInt + " - это сумма, \n" + deltaInt + " - это вычитание,  \n"  + multiInt + " - это умножение, \n"
+                + divisionInt + " - это деление, \n"  + remainderInt + " - это остаток от деления,");
+        int incMultiInt = ++multiInt;
+        int decDivisionInt = --divisionInt;
+        System.out.println(incMultiInt + " - это префиксный инкремент умножения, \n" + decDivisionInt + " - это префиксный декремент деления. \n");
 
         // Для Чаров - переменные объявил интами. При мат. операциях, чар преобразуется в Инт. Числовое максимальное значение чара = 2^16
         int sumChar = letter + 159;
