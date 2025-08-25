@@ -1,18 +1,24 @@
-/*
-5. Создай отдельный файл с классом Item, который будет означать предмет,
-который можно подобрать или с которым можно будет взаимодействовать.
-Добавь в этот класс 2 строковых поля без инициализации name и description,
-которые соответственно будут обозначать название и описание предмета.
-Сделай в этом классе конструктор который будет принимать в параметрах название и описание предметов,
-и присваивать эти значения в поля name и description.
-Таким образом нельзя будет создать объект класса Item без указания названия и описания предмета.
- */
-
 public class Item {
-    String name;
-    String description;
+    private String name;
+    private String description;
 
-    Item(String name, String description) {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Item(String name, String description) {
         this.name = name;
         this.description = description;
     }
