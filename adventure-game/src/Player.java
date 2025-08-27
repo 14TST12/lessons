@@ -35,11 +35,13 @@ public class Player {
     public void showItems() {
         if (!Arrays.stream(inventory).allMatch(Objects::isNull)) {
             for (Item item : inventory) {
-                System.out.print(item.getName() + " ");
-                System.out.println();
+                if(item != null) { // to avoid null pointer when array is not fully filled, so array item can be on any position
+                    System.out.print(item.getName() + " ");
+                }
             }
         } else {
-            System.out.println("Инвентарь пуст!");
+            System.out.println("Инвентарь пуст!"); // to show user-friendly message if user does not have any items
         }
+        System.out.println();
     }
 }
