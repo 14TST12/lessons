@@ -40,7 +40,7 @@ public class Player {
                 }
             }
         } else {
-            System.out.println("Инвентарь пуст!"); // to show user-friendly message if user does not have any items
+            System.out.print("Инвентарь пуст!"); // to show user-friendly message if user does not have any items
         }
         System.out.println();
     }
