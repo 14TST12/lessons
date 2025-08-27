@@ -1,40 +1,29 @@
-/*
-6. Создай отдельные файлы с классами для каждого типа комнат: Bedroom, Kitchen и Bathroom.
-В каждом из этих классов сделай текстовые поля name и description (думаю, уже понятно что в них будет)
-и поле items с массивом предметов (объектов с типом Item), которые будут располагаться в этой комнате.
-Все поля без инициализации, кроме items, в это поле сразу положи следующие объекты в зависимости от типа комнаты:
- */
+public class Bathroom extends Room {
 
-public class Bathroom {
-    String name;
-    String description;
-
-    /*
-    a. Bathroom - , список предметов -
-    Item: название - Зеркало, описание - Круглое зеркало над раковиной;
-    Item: название - раковина, описание - Белая керамическая раковина;
-     */
-
-    Item[] items = {
+    private final Item[] items = {
             new Item("Зеркало", "Круглое зеркало над раковиной"),
             new Item("Раковина", "Белая керамическая раковина"),
     };
 
-    /*
-    Сделай в этом классе конструктор, который будет принимать 2 параметра: название комнаты и описание;
-    присвой эти значения к соответствующим полям.
-    Добавь еще один конструктор, который будет принимать в параметрах только имя,
-    а внутри себя будет вызывать предыдущий конструктор, перенаправляя ему имя,
-    а в качестве 2-го параметра - пусть передает пустую строку.
-    Таким образом мы сможешь создавать комнаты с описанием и без.
-    */
-
-    Bathroom(String name, String description) {
-        this.name = name;
-        this.description = description;
+    public Bathroom(String name, String description) {
+        this.setName(name);
+        this.setDescription(description);
     }
 
-    Bathroom(String name) {
+    public Bathroom(String name) {
         this(name, "");
+    }
+
+    @Override
+    public void printItems() {
+        System.out.print("Предметы в комнате " + this.getName() +": ");
+        for (int i = 0; i < items.length; i++) {
+            System.out.print(items[i].getName());
+            if(i<items.length-1) {
+                System.out.print(", ");
+            } else {
+                System.out.print(".");
+            }
+        }
     }
 }
