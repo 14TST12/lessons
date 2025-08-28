@@ -1,11 +1,47 @@
-/*
-7. Создай класс Player, который будет означать игрока.
-У него, сделай строковое поле name и поле inventory с массивом предметов (Item),
-которые будут храниться у пользователя,
-сразу присвой этому полю пустой массив с размером 10 (максимальный размер инвентаря).
- */
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Player {
-    String name;
-    Item[] inventory = new Item[10];
+    private String name;
+    private Item[] inventory = new Item[10];
+    /*
+    2. Сделай в классе Player новое поле currentRoom с типом Room, которое будет хранить ссылку на конкретную комнату
+    в которой прямо сейчас находится игрок (ванная, спальня или кухня).
+    */
+    Room currentRoom = new Room();
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /*
+        5. В классе Player сделай сеттер для поля currentRoom, в котором помимо стандартного присвоения параметра к полю,
+        выведи в консоль: “Вы перешли в комнату %Название комнаты%”.
+        */
+    public void setCurrentRoom(Room currentRoom) {
+        this.currentRoom = currentRoom;
+        System.out.println("Вы перешли в комнату " + this.currentRoom.getName() + ".");
+    }
+
+    /*
+    11. Добавь в класс Player новый метод showItems, который просто распечатывает в консоль названия всех предметов в инвентаре пользователя.
+    А в классе Game добавь дополнительным пунктом под номером 2 в главное меню пункт - Показать инвентарь, и соответственно там, где ты проверяешь
+    что выбрал пользователь в меню, нужно вызвать у игрока метод showItems, если метод showMenu вернул цифру 2.
+    */
+    public void showItems() {
+        if (!Arrays.stream(inventory).allMatch(Objects::isNull)) {
+            for (Item item : inventory) {
+                if(item != null) { // to avoid null pointer when array is not fully filled, so array item can be on any position
+                    System.out.print(item.getName() + " ");
+                }
+            }
+        } else {
+            System.out.print("Инвентарь пуст!"); // to show user-friendly message if user does not have any items
+        }
+        System.out.println();
+    }
 }
