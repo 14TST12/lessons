@@ -1,4 +1,4 @@
-public class Item {
+abstract class Item {
     private String name;
     private String description;
 
