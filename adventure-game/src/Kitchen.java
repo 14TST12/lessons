@@ -1,28 +1,10 @@
 public class Kitchen extends Room {
 
-    private final Item[] items = {
-            new Item("Выдвижной ящик", "Верхний ящик под столешницей")
-    };
-
-    public Kitchen(String name, String description) {
+    public Kitchen(String name, String description,boolean isLocked) {
         this.setName(name);
         this.setDescription(description);
-    }
-
-    Kitchen(String name) {
-        this(name, "");
-    }
-
-    @Override
-    public void printItems() {
-        System.out.print("Предметы в комнате " + this.getName() +": ");
-        for (int i = 0; i < items.length; i++) {
-            System.out.print(items[i].getName());
-            if(i<items.length-1) {
-                System.out.print(", ");
-            } else {
-                System.out.print(".");
-            }
-        }
+        this.setLocked(isLocked);
+        items.add(new Furniture("Выдвижной ящик", "Верхний ящик под столешницей",""));
+        items.add(new Window("Окно", "Окно с ручкой у раковины","Окно открыто, но оно слишком маленькое, чтобы выбраться"));
     }
 }
