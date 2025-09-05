@@ -4,9 +4,9 @@ import java.util.List;
 abstract class Room {
     public List<Item> items = new ArrayList<>();
 
-    private String name;
-    private String description;
-    private boolean isLocked = false;
+    public String name;
+    public String description;
+    public boolean isLocked = false;
 
     public boolean isLocked() {
         return isLocked;

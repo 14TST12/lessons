@@ -55,7 +55,7 @@ public class Player {
         }
     }
 
-    public boolean useItemOrNot() {
+    private boolean useItemOrNot() {
         boolean useItemOrNot = false;
         System.out.println("""
                 Выбрать какой-нибудь предмет для использования?
