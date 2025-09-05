@@ -13,7 +13,7 @@ public class Game {
             // length = 7
     };
 
-    public final Room lobbyRoom = rooms[rooms.length - 1];
+    private final Room lobbyRoom = rooms[rooms.length - 1];
     private static boolean isGameFinished = false;
 
     private static void setIsGameFinished() {
@@ -139,7 +139,7 @@ public class Game {
         return readFromConsole(6);
     }
 
-    public int showRoomsAndChoose() {
+    private int showRoomsAndChoose() {
         for (int i = 1; i < rooms.length; i++) { // to hide Lobby
             System.out.println(i + ". " + rooms[i - 1].getName());
         }
