@@ -18,15 +18,16 @@ public class Key extends Item
         if (super.getDescription().equals("Старинный ключ")) {
             Game.winningTheGame();
         } else {
-            System.out.println("Ничего не произошло");
+            System.out.println("Дверь открыта");
         }
     }
 
-    public boolean unlockCheck(Room roomToCheck) {
+    public void useKeyToUnlock(Room roomToCheck) {
         if (roomToCheck == unlockingRoom) {
-            return true;
+            use();
+            roomToCheck.setLocked(false);
         } else {
-            return false;
+            System.out.println("Ничего не произошло. Дверь всё ещё закрыта");
         }
     }
 }

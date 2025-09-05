@@ -12,8 +12,8 @@ abstract class Room {
         return isLocked;
     }
 
-    public void setLocked(boolean locked) {
-        isLocked = locked;
+    public void setLocked(boolean lockStatus) {
+        isLocked = lockStatus;
     }
 
     public String getName() {

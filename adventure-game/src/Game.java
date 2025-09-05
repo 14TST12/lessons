@@ -1,35 +1,19 @@
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Game {
-    /*
-bedroom1	bedroom2	bedroom3
-	|			|			|
-	o			l			l
-	|			|			|
--------------------------------
-              lobby           --AC--> exit
--------------------------------
-	|			|			|
-	o			l			o
-	|			|			|
-bathroom1	bathroom2	kitchen
-     */
+
     private final Room[] rooms = new Room[]{
-            new Bedroom("Первая спальня", "Просторная спальня с двуспальной кроватью", false),
-            new Bedroom("Вторая спальня", "Просторная спальня с детской кроватью", true),
-            new Bedroom("Третья спальня", "Просторная спальня с двуспальной кроватью", true),
-            new Bathroom("Основная ванная комната", "Основной совмещенный санузел", false),
-            new Bathroom("Маленькая ванная комната", "Запасной совмещенный санузел", true),
-            new Kitchen("Кухня", "Большая кухня с совмещенной столовой", false),
-            new Lobby("Коридор", "Большой коридор соединящий все комнаты")
+            new Bedroom("Первая спальня", "Просторная спальня с двуспальной кроватью", false), //0
+            new Bedroom("Вторая спальня", "Просторная спальня с детской кроватью", true), //1
+            new Bedroom("Третья спальня", "Просторная спальня с двуспальной кроватью", true), //2
+            new Bathroom("Основная ванная комната", "Основной совмещенный санузел", false), //3
+            new Bathroom("Маленькая ванная комната", "Запасной совмещенный санузел", true), //4
+            new Kitchen("Кухня", "Большая кухня с совмещенной столовой", false), //5
+            new Lobby("Коридор", "Большой коридор соединящий все комнаты") //6
+            // length = 7
     };
 
-    public Room[] getRooms() {
-        return rooms;
-    }
-
-    private final Room lobbyRoom = rooms[rooms.length - 1];
+    public final Room lobbyRoom = rooms[rooms.length - 1];
     private static boolean isGameFinished = false;
 
     private static void setIsGameFinished() {
@@ -38,28 +22,42 @@ bathroom1	bathroom2	kitchen
 
     public static void main(String[] args) {
         Game game = new Game();
-        System.out.println("Добро пожаловать в игру Дом, твоя цель - найти выход из дома");
         Player player = new Player();
-        System.out.println("Придумайте и введите имя игрока");
+        System.out.println("""
+                Добро пожаловать в игру Дом, твоя цель - найти выход из дома
+                Придумайте и введите имя игрока:""");
         player.setName();
-        System.out.println("Добро пожаловать, " + player.getName());
-        System.out.println("В игре будут следующие комнаты: \n");
+        System.out.println("Добро пожаловать, " + player.getName() + "\nВ игре будут следующие комнаты:\n");
         for (Room room : game.rooms) {
             System.out.println(room.getName() + " - " + room.getDescription());
         }
+        game.generateRoomsContent(game, player);
+        useMenu(game, player);
+    }
+
+    private void generateRoomsContent(Game game, Player player) {
         // setting Lobby as a starting point
         player.setCurrentRoom(game.lobbyRoom);
-        // generating room index where ancient key will be generated
-        int ancientKeyRoomInd = new Random().nextInt(0, game.rooms.length - 2);
-        // adding keys to all rooms:
-        for (int i = 0; i < game.rooms.length; i++) {
-            if (i == ancientKeyRoomInd) {
-                game.rooms[ancientKeyRoomInd].items.add(new Key("Ключ", "Старинный ключ", game.lobbyRoom)); // adding Ancient Key to random room
-            } else {
-                game.rooms[i].items.add(new Key("Ключ", "Обычный ключ из комнаты: " + game.rooms[i].getName())); // adding 'false' keys to other rooms
+        // generating room index where ancient key will be generated (except Lobby and Kitchen)
+        int ancientKeyRoomInd = new Random().nextInt(0, 3);
+        // adding a path: "kitchen - bathroom2 -> room with ancient key"
+        game.rooms[5].items.add(new Key("Ключ", "Обычный ключ из комнаты: " + game.rooms[5].getName(), game.rooms[4]));
+        game.rooms[4].items.add(new Key("Ключ", "Обычный ключ из комнаты: " + game.rooms[4].getName(), game.rooms[ancientKeyRoomInd]));
+        game.rooms[ancientKeyRoomInd].items.add(new Key("Ключ", "Старинный ключ", game.lobbyRoom)); // adding Ancient Key to random room
+        // Generating Notes with hints for each room. 1  note for 1  room
+        List<String> noteMessages = new ArrayList<>();
+        noteMessages.add("Выход находится в коридоре");
+        noteMessages.add("Ключ поможет выйти. Используй его из инвентаря");
+        noteMessages.add("Ключ из " + game.rooms[5].getName() + " поможет открыть " + game.rooms[4].getName());
+        noteMessages.add("Ключ из " + game.rooms[4].getName() + " поможет открыть " + game.rooms[ancientKeyRoomInd].getName());
+        // shuffle notes in array to add specific note each time to different rooms
+        Collections.shuffle(noteMessages);
+        for (int i = 0; i < game.rooms.length-3; i++) {
+            // game.rooms.length-1 -> There is a main Note in Lobby generated directly in Lobby class
+            if(i!=ancientKeyRoomInd) {
+                game.rooms[i].items.add(new Note("Заметка","Заметка из комнаты " + game.rooms[i].getName(),noteMessages.get(i)));
             }
         }
-        useMenu(game, player);
     }
 
     private static void useMenu(Game game, Player player) {
@@ -75,11 +73,23 @@ bathroom1	bathroom2	kitchen
                     if (player.getCurrentRoom() == game.lobbyRoom) {
                         Room chosenRoom = game.rooms[game.showRoomsAndChoose()];
                         if (chosenRoom.isLocked()) {
-                            System.out.println("Комната закрыта! Поробовать открыть?\n" +
-                                    "1. Да. Открыть инвентарь\n" +
-                                    "2. Нет. Вернуться назад");
-                            Scanner sc = new Scanner(System.in);
-                            sc.nextInt();
+                            System.out.println("""
+                                    Комната закрыта! Попробовать открыть?
+                                    1. Да. Открыть инвентарь
+                                    0. Нет. Вернуться назад""");
+                            menuOption = readFromConsole(1);
+                            switch (menuOption) {
+                                case 1: {
+                                    player.unlockRoom(chosenRoom);
+                                    if(!chosenRoom.isLocked()) {
+                                        player.setCurrentRoom(chosenRoom);
+                                    }
+                                }
+                                case 0: {
+                                    break;
+                                }
+                            }
+
                         } else {
                             player.setCurrentRoom(chosenRoom);
                         }
@@ -89,7 +99,8 @@ bathroom1	bathroom2	kitchen
                     }
                     break;
                 case 2:
-                    player.showItems();
+                    player.showInventoryItems();
+                    player.useInventory(player.getCurrentRoom());
                     break;
                 case 3:
                     player.interact();
@@ -129,7 +140,7 @@ bathroom1	bathroom2	kitchen
     }
 
     public int showRoomsAndChoose() {
-        for (int i = 1; i <= rooms.length; i++) {
+        for (int i = 1; i < rooms.length; i++) { // to hide Lobby
             System.out.println(i + ". " + rooms[i - 1].getName());
         }
         return readFromConsole(rooms.length) - 1;

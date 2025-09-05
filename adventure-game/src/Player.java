@@ -26,11 +26,17 @@ public class Player {
         return currentRoom;
     }
 
-    public void showItems() {
+    public void unlockRoom(Room chosenRoom) {
+        showInventoryItems();
+        useInventory(chosenRoom);
+    }
+
+    public void showInventoryItems() {
         if (!Arrays.stream(inventory).allMatch(Objects::isNull)) {
-            for (Item item : inventory) {
-                if (item != null) { // to avoid null pointer when array is not fully filled, so array item can be on any position
-                    System.out.println(item.getName() + " - " + item.getDescription());
+            System.out.println("В инвентаре находятся следующие вещи:");
+            for (int i = 0; i < inventory.length - 1; i++) {
+                if (inventory[i] != null) { // to avoid null pointer when array is not fully filled, so array item can be on any position
+                    System.out.println(i + 1 + ". " + inventory[i].getName() + " - " + inventory[i].getDescription());
                 }
             }
         } else {
@@ -38,20 +44,21 @@ public class Player {
         }
     }
 
-    public void useInventory(Item item, Room room) {
-        if (item instanceof Key) {
-            if (((Key) item).unlockCheck(room)) {
-                room.setLocked(false);
+    public void useInventory(Room room) {
+        if (!Arrays.stream(inventory).allMatch(Objects::isNull) && useItemOrNot()) {
+            int itemId = getItemIdToInteract(inventory.length);
+            if (inventory[itemId] instanceof Key) {
+                ((Key) inventory[itemId]).useKeyToUnlock(room);
+            } else {
+                ((Note) inventory[itemId]).use();
             }
-        } else {
-            ((Note) item).use();
         }
     }
 
-    private boolean useItemOrNot() {
+    public boolean useItemOrNot() {
         boolean useItemOrNot = false;
         System.out.println("""
-                Осмотреть какой-нибудь предмет?
+                Выбрать какой-нибудь предмет для использования?
                 1. Да, выбрать предмет;
                 2. Нет, вернуться назад.""");
         int menuOption = Game.readFromConsole(2);
@@ -67,24 +74,24 @@ public class Player {
         return useItemOrNot;
     }
 
-    private int getItemIdToInteract() {
+    private int getItemIdToInteract(int length) {
         System.out.println("Выберите предмет для взаимодействия:");
-        return Game.readFromConsole(currentRoom.items.size()) - 1;
+        return Game.readFromConsole(length) - 1;
     }
 
     public void interact() {
         currentRoom.printItems();
         if (useItemOrNot()) {
-            int itemId = getItemIdToInteract();
-            if (itemId != 0) {
+            int itemId = getItemIdToInteract(currentRoom.items.size());
+            if (itemId >= 0) {
                 Useful usefulItem = (Useful) currentRoom.items.get(itemId);
                 if (usefulItem instanceof Collectible) {
                     System.out.println("""
                             1. Положить предмет в инвентарь
                             2. Использовать предмет
-                            3. Назад"""
+                            0. Назад"""
                     );
-                    int menuOption = Game.readFromConsole(3);
+                    int menuOption = Game.readFromConsole(2);
                     switch (menuOption) {
                         case 1: {
                             inventory[nextFreeInd] = currentRoom.items.get(itemId);
@@ -95,10 +102,14 @@ public class Player {
                             break;
                         }
                         case 2: {
-                            usefulItem.use();
+                            if (usefulItem instanceof Note) {
+                                usefulItem.use();
+                            } else {
+                                System.out.println("Ничего не произошло"); // Key instances must be used near locked doors
+                            }
                             break;
                         }
-                        case 3: {
+                        case 0: {
                             interact();
                             break;
                         }
