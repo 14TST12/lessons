@@ -1,6 +1,6 @@
-public class Item {
+abstract class Item {
     private String name;
-    private String description;
+    private final String description;
 
     public String getName() {
         return name;
@@ -12,10 +12,6 @@ public class Item {
 
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Item(String name, String description) {
