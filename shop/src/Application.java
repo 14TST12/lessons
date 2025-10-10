@@ -1,13 +1,16 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 public class Application {
 
-    private static ArrayList<Product> products = new ArrayList<>(Arrays.asList(
-            new Product("Laptop", "Gaming Laptop", 1000, Category.ELECTRONICS),
-            new Product("Laptop", "Office Laptop", 500, Category.ELECTRONICS),
-            new Product("Chair", "Office Chair", 60, Category.FURNITURE),
-            new Product("Screen Protector", "Screen Protector for monitors and laptops", 60, Category.ACCESSORIES)
-    ));
+
+    private static ArrayList<Product> products;
+
+    // Note: some records were added to file during code testing
+    static {
+        products = FileUtil.readProducts();
+    }
 
     public static void main(String[] args) {
         Menu menu = new Menu();
@@ -26,8 +29,16 @@ public class Application {
                     break;
                 }
                 case 2: {
-                    Product newProduct = menu.createProduct();
-                    products.add(newProduct);
+                    try {
+                        Product newProduct = menu.createProduct();
+                        FileUtil.saveProducts(newProduct);
+                        products.add(newProduct);
+                    } catch (IOException ioe) {
+                        System.out.println("Произошла ошибка! Каким-то чудом я пропустил IOException при обычной валидации, хотя я думал, что это уже невозможно. Введённые параметры продукта не соответствуют формату файла.\n" +
+                                "Пожалуйста, перепроверьте данные в файле products.csv.\n" +
+                                FileUtil.fileFormatInstruction);
+                        System.out.println("Текст ошибки:\n" + ioe.getMessage());
+                    }
                     break;
                 }
                 case 0: {
@@ -48,7 +59,7 @@ public class Application {
                 "\n     |Описание: " + products.get(productIndex).description +
                 "\n     |Цена: " + products.get(productIndex).price + " ₾" +
                 "\n     |Категория: " + products.get(productIndex).category.toString().toLowerCase() +
-                "\n" +"─".repeat(100)
+                "\n" + "─".repeat(100)
         );
     }
 }
