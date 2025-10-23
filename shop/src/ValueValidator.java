@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class ValueValidator {
 
     // Moved value validations to separate class as it was agreed in previous task
-    public static int readIntFromConsole(int limit, boolean isZeroAllowed) {
+    public int readIntFromConsole(int limit, boolean isZeroAllowed) {
         Scanner sc = new Scanner(System.in);
         int chosenOption;
         do {
@@ -28,7 +28,7 @@ public class ValueValidator {
         return chosenOption;
     }
 
-    public static double receivePrice() {
+    public double receivePrice() {
         Scanner sc = new Scanner(System.in);
         double price = 0;
         boolean isPriceValid = false;

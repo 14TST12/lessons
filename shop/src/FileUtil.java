@@ -10,7 +10,7 @@ public class FileUtil {
             -----------------------------------------------------------------------------------------------------
             """;
 
-    public static void saveProducts(Product product) throws IOException {
+    public void saveProducts(Product product) throws IOException {
         File catalogFile = new File("products.csv");
         if (catalogFile.exists()) {
             BufferedWriter bw = new BufferedWriter(new FileWriter(catalogFile, true));
@@ -18,33 +18,27 @@ public class FileUtil {
             bw.flush();
             bw.close();
         } else {
-            System.out.println("\nУпс! Кажется файла с продуктами не существует или он находится в неправильной папке. Файл products.csv должен находиться в корневой папке проекта shop\n" +
-                    "При создании нового продукта, продукт будет добавлен в список товаров,\n" +
-                    "НО записи утеряются при перезапуске приложения");
+            System.out.println("""
+
+                    Упс! Кажется файла с продуктами не существует или он находится в неправильной папке. Файл products.csv должен находиться в корневой папке проекта shop
+                    При создании нового продукта, продукт будет добавлен в список товаров,
+                    НО записи утеряются при перезапуске приложения""");
         }
     }
 
-    public static ArrayList<Product> readProducts() {
-        ArrayList<Product> products = new ArrayList<>();
+    public ArrayList<String[]> readProducts() {
         int rowCount = 1;
-
+        ArrayList<String[]> catalog = new ArrayList<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader("products.csv"));
             String str;
             String rowsWithMistakes = "";
             while ((str = br.readLine()) != null) {
                 String[] row = str.split(",");
+                catalog.add(row);
                 if (row.length != 4) {
                     rowsWithMistakes = rowsWithMistakes + " " + rowCount;
                 }
-                /*
-                There is a discrepancy between the format in Product constructor in code and the format of product record in file:
-                public Product(String name, String description, double price, Category category (! - after price))
-                At the same time, it has different order in file:
-                "Кровать,Стильная молодежная кровать,FURNITURE (! - before price),499.99"
-                That is why during product creation 3rd index value comes before 2nd index value
-                 */
-                products.add(new Product(row[0], row[1], Double.parseDouble(row[3]), Category.valueOf(row[2])));
                 rowCount++;
             }
             if (!rowsWithMistakes.isEmpty()) {
@@ -79,6 +73,6 @@ public class FileUtil {
                     "\nТекст ошибки: " + ioe.getMessage() + "\n" +
                     fileFormatInstruction);
         }
-        return products;
+        return catalog;
     }
 }
