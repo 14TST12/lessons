@@ -1,3 +1,5 @@
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class ProductCreator {
@@ -10,14 +12,14 @@ public class ProductCreator {
         String description = sc.nextLine();
         description = description.replaceAll("[,\"]", " ");
         ValueValidator validator = new ValueValidator();
-        double price = validator.receivePrice();
+        BigDecimal price = validator.receivePrice();
         System.out.println("""
                 Выберите категорию товара из предложенных:
                 1. Электроника;
                 2. Мебель;
                 3. Аксессуары.""");
         int categoryType = validator.readIntFromConsole(3, false);
-        Category category = null;
+        Category category = Category.UNDEFINED;
         switch (categoryType) {
             case 1: {
                 category = Category.ELECTRONICS;
@@ -33,6 +35,6 @@ public class ProductCreator {
             }
         }
         System.out.println("Продукт был добавлен в список товаров!");
-        return new Product(name, description, price, category);
+        return new Product(name, description, price, category, LocalDate.now());
     }
 }

@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class ValueValidator {
@@ -28,15 +29,15 @@ public class ValueValidator {
         return chosenOption;
     }
 
-    public double receivePrice() {
+    public BigDecimal receivePrice() {
         Scanner sc = new Scanner(System.in);
-        double price = 0;
+        BigDecimal price = BigDecimal.ZERO;
         boolean isPriceValid = false;
         while (!isPriceValid) {
             System.out.println("Введите цену. Цена может быть дробным значением (с разделителем ','):");
             if (sc.hasNextDouble()) {
-                price = sc.nextDouble();
-                if (price >= 0) {
+                price = sc.nextBigDecimal();
+                if (price.signum() >= 0) {
                     isPriceValid = true;
                 } else {
                     System.out.println("Ошибка: Цена не может быть отрицательной.");
