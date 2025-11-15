@@ -1,5 +1,6 @@
 public enum Category {
     ELECTRONICS,
     FURNITURE,
-    ACCESSORIES
+    ACCESSORIES,
+    UNDEFINED
 }
